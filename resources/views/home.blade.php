@@ -48,7 +48,7 @@
                     <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
                             class="text-white">Bandung Jawa Barat, Indonesia</a></small>
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
-                            class="text-white">konserkitadotid@gmail.com</a></small>
+                            class="text-white">info@konserkita.id</a></small>
                 </div>
                 <div class="top-link pe-2">
                     <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
@@ -70,8 +70,10 @@
                     <div class="navbar-nav mx-auto">
                         <a href="{{ url('/') }}"
                             class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
-                        <a href="{{ url('/concert') }}"
-                            class="nav-item nav-link {{ request()->is('concert') ? 'active' : '' }}">Concert</a>
+
+                        <a href="{{ route('concert.list') }}"
+                            class="nav-item nav-link {{ request()->is('concerts') ? 'active' : '' }}">Concert</a>
+
                         <a href="{{ url('/buy-ticket') }}"
                             class="nav-item nav-link {{ request()->is('buy-ticket') ? 'active' : '' }}">Buy Ticket</a>
 
@@ -88,17 +90,26 @@
                         <a href="{{ url('/contact') }}"
                             class="nav-item nav-link {{ request()->is('contact') ? 'active' : '' }}">Contact</a>
                     </div>
+
                     <div class="d-flex m-3 me-0">
                         <button
                             class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                             data-bs-toggle="modal" data-bs-target="#searchModal"><i
                                 class="fas fa-search text-primary"></i></button>
-                        <a href="#" class="position-relative me-4 my-auto">
+                        <a href="{{ route('cart.index') }}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
+                            @php
+                                $cart = session('cart', []);
+                                $totalItems = array_sum(array_column($cart, 'quantity'));
+                            @endphp
                             <span
                                 class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                                style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                                style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                                {{ $totalItems }}
+                            </span>
                         </a>
+
+
                         <a href="{{ url('/admin') }}" class="my-auto">
                             <i class="fas fa-user fa-2x"></i>
                         </a>
@@ -177,8 +188,7 @@
     </div>
     <!-- Hero End -->
 
-
-    <!-- Featurs Section Start -->
+    <!-- Main Page Start -->
     <div class="container-fluid featurs py-5">
         <div class="container py-5">
             <div class="row g-4">
@@ -229,10 +239,9 @@
             </div>
         </div>
     </div>
-    <!-- Featurs Section End -->
+    <!-- Main Page End -->
 
-
-    <!-- Fruits Shop Start-->
+    <!-- Daftar Konser Start-->
     <div class="container-fluid fruite py-5">
         <div class="container py-5">
             <div class="tab-class text-center">
@@ -261,36 +270,12 @@
                 </div>
 
                 <div class="tab-content">
+
                     {{-- All Concert --}}
                     <div id="tab-all" class="tab-pane fade show p-0 active">
                         <div class="row g-4">
                             @foreach ($concerts as $concert)
-                                <div class="col-md-6 col-lg-4 col-xl-3">
-                                    <div class="rounded position-relative fruite-item">
-                                        <div class="fruite-img">
-                                            <img src="{{ asset('storage/' . $concert->image) }}"
-                                                class="img-fluid w-100 rounded-top" alt="">
-                                        </div>
-                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                            style="top: 10px; left: 10px;">
-                                            {{ $concert->genre }}
-                                        </div>
-                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                            <h4>{{ $concert->title }}</h4>
-                                            <p>{{ $concert->location }} -
-                                                {{ \Carbon\Carbon::parse($concert->datetime)->format('d M Y, H:i') }}
-                                            </p>
-                                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                                <p class="text-dark fs-5 fw-bold mb-0">
-                                                    Rp{{ number_format($concert->price, 0, ',', '.') }}</p>
-                                                <a href="#"
-                                                    class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @include('components.concert-card', ['concert' => $concert])
                             @endforeach
                         </div>
                     </div>
@@ -300,46 +285,19 @@
                         <div id="tab-{{ strtolower($genre) }}" class="tab-pane fade show p-0">
                             <div class="row g-4">
                                 @foreach ($concerts->where('genre', $genre) as $concert)
-                                    <div class="col-md-6 col-lg-4 col-xl-3">
-                                        {{-- Duplikat isi card di atas --}}
-                                        <div class="rounded position-relative fruite-item">
-                                            <div class="fruite-img">
-                                                <img src="{{ asset('storage/' . $concert->image) }}"
-                                                    class="img-fluid w-100 rounded-top" alt="">
-                                            </div>
-                                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                                style="top: 10px; left: 10px;">
-                                                {{ $concert->genre }}
-                                            </div>
-                                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                <h4>{{ $concert->title }}</h4>
-                                                <p>{{ $concert->location }} -
-                                                    {{ \Carbon\Carbon::parse($concert->datetime)->format('d M Y, H:i') }}
-                                                </p>
-                                                <div class="d-flex justify-content-between flex-lg-wrap">
-                                                    <p class="text-dark fs-5 fw-bold mb-0">
-                                                        Rp{{ number_format($concert->price, 0, ',', '.') }}</p>
-                                                    <a href="#"
-                                                        class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                        <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to
-                                                        cart
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @include('components.concert-card', ['concert' => $concert])
                                 @endforeach
                             </div>
                         </div>
                     @endforeach
+
                 </div>
             </div>
         </div>
     </div>
-    <!-- Fruits Shop End-->
+    <!-- Daftar Konser End-->
 
-
-    <!-- Featurs Start -->
+    <!-- Promotion Start -->
     <div class="container-fluid service py-5">
         <div class="container py-5">
             <div class="row g-4 justify-content-center">
@@ -385,10 +343,9 @@
             </div>
         </div>
     </div>
-    <!-- Featurs End -->
+    <!-- Promotion End -->
 
-
-    <!-- Vesitable Shop Start-->
+    <!-- Konser Terdekat Start-->
     <div class="container-fluid vesitable py-5">
         <div class="container py-5">
             <h1 class="mb-0">Konser Terdekat</h1>
@@ -415,23 +372,19 @@
                                 Memuat waktu...
                             </div>
 
-                            <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">
-                                    Rp{{ number_format($concert->price, 0, ',', '.') }}
-                                </p>
-                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                            {{-- Tombol Notifikasi --}}
+                            <div class="text-center mt-3">
+                                <a href="#" class="btn btn-outline-primary rounded-pill px-4">
+                                    <i class="fa fa-bell me-2"></i> Add Notifikasi
                                 </a>
                             </div>
                         </div>
                     </div>
                 @endforeach
-
             </div>
         </div>
     </div>
-    <!-- Vesitable Shop End -->
-
+    <!-- Konser Terdekat End -->
 
     <!-- Banner Section Start-->
     <div class="container-fluid banner bg-secondary my-5">
@@ -459,7 +412,7 @@
     </div>
     <!-- Banner Section End -->
 
-    <!-- Bestsaler Product Start -->
+    <!-- Best Konser Start -->
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="text-center mx-auto mb-5" style="max-width: 700px;">
@@ -498,9 +451,8 @@
                                         @endfor
                                     </div>
 
-                                    <h4 class="mb-3">Rp{{ number_format($concert->price, 0, ',', '.') }}</h4>
-                                    <a href="#"
-                                        class="btn border border-secondary rounded-pill px-3 text-primary">
+                                    <a href="{{ route('concert.list') }}"
+                                        class="btn border border-secondary rounded-pill text-primary">
                                         Pesan Tiket
                                     </a>
                                 </div>
@@ -511,10 +463,9 @@
             </div>
         </div>
     </div>
-    <!-- Bestsaler Product End -->
+    <!-- Best Konser End -->
 
-
-    <!-- Fact Start -->
+    <!-- Result Start -->
     <div class="container-fluid py-5">
         <div class="container">
             <div class="bg-light p-5 rounded">
@@ -551,7 +502,7 @@
             </div>
         </div>
     </div>
-    <!-- Fact Start -->
+    <!-- Result Start -->
 
 
     <!-- Tastimonial Start -->
@@ -574,11 +525,13 @@
                             </div>
 
                             <div class="d-flex align-items-center flex-nowrap">
-                                <div class="bg-secondary rounded">
+                                <div class="bg-secondary rounded overflow-hidden"
+                                    style="width: 100px; height: 100px;">
                                     <img src="{{ asset('storage/' . $testimonial->image) }}"
-                                        class="img-fluid rounded" style="width: 100px; height: 100px;"
+                                        class="img-fluid w-100 h-100 object-fit-cover"
                                         alt="{{ $testimonial->name }}">
                                 </div>
+
 
                                 <div class="ms-4 d-block">
                                     <h4 class="text-dark">{{ $testimonial->name }}</h4>
@@ -604,7 +557,6 @@
             </div>
         </div>
     </div>
-
     <!-- Tastimonial End -->
 
 
@@ -615,8 +567,8 @@
                 <div class="row g-4">
                     <div class="col-lg-3">
                         <a href="#">
-                            <h1 class="text-primary mb-0">Fruitables</h1>
-                            <p class="text-secondary mb-0">Fresh products</p>
+                            <h1 class="text-primary mb-0">konserkita.id</h1>
+                            <p class="text-secondary mb-0">#tempatnyatiketkonser</p>
                         </a>
                     </div>
                     <div class="col-lg-6">
@@ -646,8 +598,9 @@
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-item">
                         <h4 class="text-light mb-3">Why People Like us!</h4>
-                        <p class="mb-4">typesetting, remaining essentially unchanged. It was
-                            popularised in the 1960s with the like Aldus PageMaker including of Lorem Ipsum.</p>
+                        <p class="mb-4">Platform pemesanan tiket konser yang mudah, cepat, dan terpercaya. Dapatkan
+                            pengalaman musik terbaik hanya di KonserKita.id!
+                        </p>
                         <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read
                             More</a>
                     </div>
@@ -676,12 +629,12 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-item">
-                        <h4 class="text-light mb-3">Contact</h4>
-                        <p>Address: 1429 Netus Rd, NY 48247</p>
-                        <p>Email: Example@gmail.com</p>
-                        <p>Phone: +0123 4567 8910</p>
-                        <p>Payment Accepted</p>
-                        <img src="img/payment.png" class="img-fluid" alt="">
+                        <h4 class="text-light mb-3">Kontak Kami</h4>
+                        <p>Bandung Jawa Barat, Indonesia</p>
+                        <p>Email: info@konserkita.id</p>
+                        <p>Telepon: +62 831-3397-7214</p>
+                        <p>Payment Accepted:</p>
+                        <img src="{{ asset('img/payment.png') }}" class="img-fluid" alt="Metode Pembayaran">
                     </div>
                 </div>
             </div>
@@ -694,15 +647,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your
-                            Site Name</a>, All right
-                        reserved.</span>
+                    <span class="text-light">
+                        <a href="{{ url('/') }}" class="text-light text-decoration-none">
+                            <i class="fas fa-music text-light me-2"></i>KonserKita.id
+                        </a>, Copyright by &copy; {{ date('Y') }}.
+                    </span>
                 </div>
                 <div class="col-md-6 my-auto text-center text-md-end text-white">
-                    <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                    <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                    <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    Dibuat oleh <a class="border-bottom text-white text-decoration-none" href="#">Faisya
+                        Company</a>
                 </div>
             </div>
         </div>

@@ -34,7 +34,7 @@
 
     <!-- Spinner Start -->
     <div id="spinner"
-        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-grow text-primary" role="status"></div>
     </div>
     <!-- Spinner End -->
@@ -46,9 +46,9 @@
             <div class="d-flex justify-content-between">
                 <div class="top-info ps-2">
                     <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
-                            class="text-white">123 Street, New York</a></small>
+                            class="text-white">Bandung Jawa Barat, Indonesia</a></small>
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
-                            class="text-white">Email@Example.com</a></small>
+                            class="text-white">info@konserkita.id</a></small>
                 </div>
                 <div class="top-link pe-2">
                     <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
@@ -60,7 +60,7 @@
         <div class="container px-0">
             <nav class="navbar navbar-light bg-white navbar-expand-xl">
                 <a href="index.html" class="navbar-brand">
-                    <h1 class="text-primary display-6">Fruitables</h1>
+                    <h1 class="text-primary display-6">KonserKita.id</h1>
                 </a>
                 <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarCollapse">
@@ -70,8 +70,10 @@
                     <div class="navbar-nav mx-auto">
                         <a href="{{ url('/') }}"
                             class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
-                        <a href="{{ url('/concert') }}"
-                            class="nav-item nav-link {{ request()->is('concert') ? 'active' : '' }}">Concert</a>
+
+                        <a href="{{ route('concert.list') }}"
+                            class="nav-item nav-link {{ request()->is('concerts') ? 'active' : '' }}">Concert</a>
+
                         <a href="{{ url('/buy-ticket') }}"
                             class="nav-item nav-link {{ request()->is('buy-ticket') ? 'active' : '' }}">Buy Ticket</a>
 
@@ -88,6 +90,7 @@
                         <a href="{{ url('/contact') }}"
                             class="nav-item nav-link {{ request()->is('contact') ? 'active' : '' }}">Contact</a>
                     </div>
+
                     <div class="d-flex m-3 me-0">
                         <button
                             class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
@@ -99,7 +102,7 @@
                                 class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                                 style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                         </a>
-                        <a href="#" class="my-auto">
+                        <a href="{{ url('/admin') }}" class="my-auto">
                             <i class="fas fa-user fa-2x"></i>
                         </a>
                     </div>
@@ -146,175 +149,100 @@
     <!-- Cart Page Start -->
     <div class="container-fluid py-5">
         <div class="container py-5">
+            <h2 class="mb-4">Keranjang Tiket Konser</h2>
+
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Products</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Handle</th>
+                            <th>Poster</th>
+                            <th>Nama Konser</th>
+                            <th>Harga Tiket</th>
+                            <th>Jumlah</th>
+                            <th>Total</th>
+                            <th>Hapus</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">
-                                <div class="d-flex align-items-center">
-                                    <img src="img/vegetable-item-3.png" class="img-fluid me-5 rounded-circle"
-                                        style="width: 80px; height: 80px;" alt="">
-                                </div>
-                            </th>
-                            <td>
-                                <p class="mb-0 mt-4">Big Banana</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm text-center border-0"
-                                        value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </td>
+                        @php
+                            $subtotal = 0;
+                        @endphp
 
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <div class="d-flex align-items-center">
-                                    <img src="img/vegetable-item-5.jpg" class="img-fluid me-5 rounded-circle"
-                                        style="width: 80px; height: 80px;" alt="" alt="">
-                                </div>
-                            </th>
-                            <td>
-                                <p class="mb-0 mt-4">Potatoes</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
+                        @forelse ($cart as $item)
+                            @php
+                                $itemTotal = $item['price'] * $item['quantity'];
+                                $subtotal += $itemTotal;
+                            @endphp
+
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('storage/' . $item['image']) }}"
+                                            class="img-fluid me-3 rounded-circle"
+                                            style="width: 80px; height: 80px; object-fit: cover;"
+                                            alt="{{ $item['title'] }}">
                                     </div>
-                                    <input type="text" class="form-control form-control-sm text-center border-0"
-                                        value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
+                                </td>
+                                <td class="align-middle">{{ $item['title'] }}</td>
+                                <td class="align-middle">Rp{{ number_format($item['price'], 0, ',', '.') }}</td>
+                                <td class="align-middle">
+                                    <div class="input-group quantity" style="width: 100px;">
+                                        <a href="{{ route('cart.decrease', $item['id']) }}"
+                                            class="btn btn-sm btn-light border">-</a>
+                                        <input type="text"
+                                            class="form-control form-control-sm text-center border-0"
+                                            value="{{ $item['quantity'] }}" readonly>
+                                        <a href="{{ route('cart.increase', $item['id']) }}"
+                                            class="btn btn-sm btn-light border">+</a>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <div class="d-flex align-items-center">
-                                    <img src="img/vegetable-item-2.jpg" class="img-fluid me-5 rounded-circle"
-                                        style="width: 80px; height: 80px;" alt="" alt="">
-                                </div>
-                            </th>
-                            <td>
-                                <p class="mb-0 mt-4">Awesome Brocoli</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm text-center border-0"
-                                        value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                </td>
+                                <td class="align-middle">
+                                    Rp{{ number_format($itemTotal, 0, ',', '.') }}
+                                </td>
+                                <td class="align-middle">
+                                    <a href="{{ route('cart.remove', $item['id']) }}"
+                                        class="btn btn-sm btn-danger rounded-circle">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Cart masih kosong.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-            <div class="mt-5">
-                <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4"
-                    placeholder="Coupon Code">
-                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply
-                    Coupon</button>
-            </div>
-            <div class="row g-4 justify-content-end">
-                <div class="col-8"></div>
-                <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                    <div class="bg-light rounded">
-                        <div class="p-4">
-                            <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
-                            <div class="d-flex justify-content-between mb-4">
-                                <h5 class="mb-0 me-4">Subtotal:</h5>
-                                <p class="mb-0">$96.00</p>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <h5 class="mb-0 me-4">Shipping</h5>
-                                <div class="">
-                                    <p class="mb-0">Flat rate: $3.00</p>
+
+            @if ($subtotal > 0)
+                <div class="row g-4 justify-content-end">
+                    <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                        <div class="bg-light rounded">
+                            <div class="p-4">
+                                <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h5 class="mb-0 me-4">Subtotal:</h5>
+                                    <p class="mb-0">Rp{{ number_format($subtotal, 0, ',', '.') }}</p>
                                 </div>
                             </div>
-                            <p class="mb-0 text-end">Shipping to Ukraine.</p>
+
+                            <form method="POST" action="{{ route('orders.store') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4 w-75">
+                                    Proceed to Checkout
+                                </button>
+                            </form>
                         </div>
-                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                            <h5 class="mb-0 ps-4 me-4">Total</h5>
-                            <p class="mb-0 pe-4">$99.00</p>
-                        </div>
-                        <button
-                            class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                            type="button">Proceed Checkout</button>
                     </div>
                 </div>
-            </div>
+            @endif
+
         </div>
     </div>
-    <!-- Cart Page End -->
 
+    <!-- Cart Page End -->
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
@@ -323,8 +251,8 @@
                 <div class="row g-4">
                     <div class="col-lg-3">
                         <a href="#">
-                            <h1 class="text-primary mb-0">Fruitables</h1>
-                            <p class="text-secondary mb-0">Fresh products</p>
+                            <h1 class="text-primary mb-0">konserkita.id</h1>
+                            <p class="text-secondary mb-0">#tempatnyatiketkonser</p>
                         </a>
                     </div>
                     <div class="col-lg-6">
@@ -354,8 +282,10 @@
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-item">
                         <h4 class="text-light mb-3">Why People Like us!</h4>
-                        <p class="mb-4">typesetting, remaining essentially unchanged. It was
-                            popularised in the 1960s with the like Aldus PageMaker including of Lorem Ipsum.</p>
+                        <p class="mb-4">Platform pemesanan tiket konser yang mudah, cepat, dan terpercaya.
+                            Dapatkan
+                            pengalaman musik terbaik hanya di KonserKita.id!
+                        </p>
                         <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read
                             More</a>
                     </div>
@@ -384,12 +314,12 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-item">
-                        <h4 class="text-light mb-3">Contact</h4>
-                        <p>Address: 1429 Netus Rd, NY 48247</p>
-                        <p>Email: Example@gmail.com</p>
-                        <p>Phone: +0123 4567 8910</p>
-                        <p>Payment Accepted</p>
-                        <img src="img/payment.png" class="img-fluid" alt="">
+                        <h4 class="text-light mb-3">Kontak Kami</h4>
+                        <p>Bandung Jawa Barat, Indonesia</p>
+                        <p>Email: info@konserkita.id</p>
+                        <p>Telepon: +62 831-3397-7214</p>
+                        <p>Payment Accepted:</p>
+                        <img src="{{ asset('img/payment.png') }}" class="img-fluid" alt="Metode Pembayaran">
                     </div>
                 </div>
             </div>
@@ -402,14 +332,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your
-                            Site Name</a>, All right reserved.</span>
+                    <span class="text-light">
+                        <a href="{{ url('/') }}" class="text-light text-decoration-none">
+                            <i class="fas fa-music text-light me-2"></i>KonserKita.id
+                        </a>, Copyright by &copy; {{ date('Y') }}.
+                    </span>
                 </div>
                 <div class="col-md-6 my-auto text-center text-md-end text-white">
-                    <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                    <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                    <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    Dibuat oleh <a class="border-bottom text-white text-decoration-none" href="#">Faisya
+                        Company</a>
                 </div>
             </div>
         </div>

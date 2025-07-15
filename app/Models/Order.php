@@ -6,21 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Concert extends Model
+class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
-        'location',
-        'datetime',
-        'genre',
-        'price',
-        'image',
+        'name',
+        'email',
+        'phone',
+        'total_price',
     ];
 
-    public function discount()
+    public function items()
     {
-        return $this->hasOne(Discount::class);
+        return $this->hasMany(OrderItem::class);
     }
 }

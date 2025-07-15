@@ -417,6 +417,10 @@
 
 
 /*** testimonial Start ***/
+.object-fit-cover {
+    object-fit: cover;
+}
+
 .testimonial .owl-nav .owl-prev {
     position: absolute;
     top: -58px;
